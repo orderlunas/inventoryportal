@@ -1,77 +1,52 @@
 <!DOCTYPE html>
-
 <html>
 
   <head>
     <meta charset="UTF-8">
-    <title>Inventory</title>
-
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <title>Product Inventory</title>
+    <link rel="icon" type="image/png" href="./lunaslogo.jpg">
 
     <style>
+      /* ---------- BASE ---------- */
       body {
+        font-family: system-ui;
+        background: #f4f5f7;
         margin: 0;
-        font-family: Segoe UI;
-        background: #f3f5f7;
       }
 
+      /* HEADER */
       .header {
-        background: #e9ecef;
-        padding: 18px 40px;
         display: flex;
         align-items: center;
         gap: 15px;
+        padding: 20px 40px;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .05);
       }
 
-      .logo {
+      .header img {
         width: 70px;
         height: 70px;
         border-radius: 50%;
       }
 
-      .title {
-        font-size: 28px;
+      .header h2 {
+        margin: 0;
         font-weight: 600;
       }
 
-      .login {
-        max-width: 320px;
-        margin: 120px auto;
-        background: white;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, .1);
-      }
-
-      .login input {
-        width: 100%;
-        padding: 10px;
-        margin-top: 10px;
-        border-radius: 8px;
-        border: 1px solid #ddd;
-      }
-
-      .login button {
-        margin-top: 15px;
-        width: 100%;
-        padding: 10px;
-        border: none;
-        background: #000814;
-        color: white;
-        border-radius: 8px;
-        cursor: pointer;
-      }
-
-      .container {
-        max-width: 1100px;
+      /* CARD */
+      .card {
         margin: 40px auto;
-        background: white;
-        border-radius: 18px;
-        padding: 25px 30px;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, .05);
+        width: 60%;
+        background: #fff;
+        border-radius: 14px;
+        padding: 25px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, .06);
       }
 
-      .topbar {
+      /* SEARCH BAR */
+      .toolbar {
         display: flex;
         justify-content: flex-end;
         gap: 12px;
@@ -79,277 +54,310 @@
       }
 
       .search {
+        width: 320px;
         padding: 10px 14px;
-        border-radius: 10px;
-        border: 1px solid #ddd;
-        width: 260px;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        outline: none;
       }
 
-      .add-btn {
+      /* ADD BUTTON */
+      .addBtn {
         width: 42px;
         height: 42px;
         border-radius: 50%;
-        background: #000814;
-        color: white;
-        border: none;
+        background: #275538;
+        color: #fff;
         font-size: 22px;
+        border: none;
         cursor: pointer;
       }
 
+      /* TABLE */
       table {
         width: 100%;
         border-collapse: collapse;
+        table-layout: fixed;
       }
 
       th {
+        font-size: 13px;
+        color: #6b7280;
         text-align: left;
-        padding: 14px 10px;
-        color: #777;
-        border-bottom: 1px solid #eee;
+        padding-bottom: 12px;
+      }
+
+      th:nth-child(1),
+      td:nth-child(1) {
+        text-align: left;
+        width: 50%;
+      }
+
+      th:nth-child(2),
+      td:nth-child(2) {
+        text-align: center;
+        width: 30%;
+      }
+
+      th:nth-child(3),
+      td:nth-child(3) {
+        width: 20%;
+        text-align: center;
       }
 
       td {
-        padding: 18px 10px;
-        border-bottom: 1px solid #f0f0f0;
+        padding: 16px 0;
+        border-top: 1px solid #f1f5f9;
       }
 
-      .icon-btn {
-        background: #fff;
-        border: 1px solid #eee;
-        border-radius: 10px;
-        padding: 8px 10px;
-        margin-left: 6px;
-        cursor: pointer;
+      tr:hover {
+        background: #fafafa;
       }
 
-      .counter {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .counter button {
+      /* ICON BUTTONS */
+      .iconBtn {
         width: 34px;
         height: 34px;
+        border: 1px solid #275538;
+        background: #f4f4f4;
+        padding: 8px 8px;
         border-radius: 8px;
-        border: 1px solid #ddd;
-        background: white;
+        cursor: pointer;
+        margin-left: 5px;
       }
 
-      .counter input {
-        width: 50px;
+      .save {
+        border-color: #bbf7d0;
+        color: #15803d;
+      }
+
+      .cancel {
+        border-color: #fecaca;
+        color: #b91c1c;
+      }
+
+      /* LOADING */
+      .loading {
         text-align: center;
-        border: none;
-        font-size: 18px;
+        padding: 30px;
+        color: #777;
       }
 
+      /* TOAST */
+      .toast {
+        position: fixed;
+        right: 30px;
+        top: 20px;
+        background: #000;
+        color: #fff;
+        padding: 14px 18px;
+        border-radius: 8px;
+        opacity: 0;
+        transition: .3s;
+      }
+
+      /* MODAL */
       .modal {
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, .35);
+        background: rgba(0, 0, 0, .3);
         display: none;
         justify-content: center;
         align-items: center;
       }
 
-      .modal-box {
-        background: white;
+      .popup {
+        background: #fff;
         padding: 25px;
-        border-radius: 14px;
-        width: 320px;
+        border-radius: 12px;
+        width: 300px;
       }
 
-      .toast {
-        position: fixed;
-        top: 25px;
-        right: 25px;
-        background: #28a745;
+      .popup input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+
+      .popup button {
+        padding: 10px 14px;
+        margin-right: 8px;
+      }
+
+      .counter {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .counter button {
+        width: 28px;
+        height: 28px;
+        border: none;
+        background: #275538;
         color: white;
-        padding: 14px 22px;
-        border-radius: 10px;
-        display: none;
+        font-size: 16px;
+        border-radius: 6px;
+        cursor: pointer;
       }
 
-      #loader {
-        text-align: center;
-        padding: 20px;
-        color: #888;
+      .add-prd-save-btn {
+        background: #275538;
+        color: white;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+      }
+
+      .add-prd-save-btn:hover {
+        background: #000;
+      }
+
+      .add-prd-cancel-btn {
+        background: white;
+        color: #275538;
+        border: 1px solid #275538;
+        padding: 10px 18px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+      }
+
+      .add-prd-cancel-btn:hover {
+        background: white;
+      }
+
+      .edit-product {
+        width: 320px;
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        outline: none;
       }
     </style>
-
   </head>
 
   <body>
 
     <div class="header">
-      <img src="./lunaslogo.jpg" class="logo">
-      <div class="title">Inventory</div>
+      <img src="./lunaslogo.jpg">
+      <h2>Product Inventory</h2>
     </div>
 
-    <div id="loginBox" class="login">
-      <h3>Admin Login</h3>
-      <input id="user" placeholder="User" style="width: 90%;">
-      <input id="pass" type="password" placeholder="Password" style="width: 90%;">
-      <button type="button" onclick="login()" style="width: 97%;">Login</button>
-    </div>
+    <div class="card">
 
-    <div id="app" style="display:none">
-
-      <div class="container">
-
-        <div class="topbar">
-          <input class="search" placeholder="Search products..." onkeyup="search(this.value)">
-          <button class="add-btn" onclick="openAdd()">+</button>
-        </div>
-
-        <div id="loader">Loading inventory...</div>
-
-        <table>
-          <thead>
-            <tr>
-              <th>Product</th>
-              <th>Stock</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="tableBody"></tbody>
-        </table>
-
+      <div class="toolbar">
+        <input class="search" placeholder="Search products..." oninput="searchProducts(this.value)">
+        <button class="addBtn" onclick="openModal()">+</button>
       </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Stock</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody id="tableBody"></tbody>
+
+      </table>
+
+      <div id="loading" class="loading">
+        Loading inventory...
+      </div>
+
     </div>
 
-    <div class="modal" id="modal">
-      <div class="modal-box">
+    <div id="toast" class="toast"></div>
+
+    <!-- MODAL -->
+    <div id="modal" class="modal">
+      <div class="popup">
         <h3>Add Product</h3>
-        <input id="newProduct" placeholder="Product">
-        <input id="newStock" type="number" placeholder="Stock">
-        <br><br>
-        <button onclick="addProduct()">Save</button>
-        <button onclick="closeModal()">Cancel</button>
+        <input id="newProduct" placeholder="Product" style="width: 93%;">
+        <input id="newStock" type="number" placeholder="Stock" style="width: 93%;">
+        <button class="add-prd-save-btn" onclick="addProduct()">Save</button>
+        <button class="add-prd-cancel-btn" onclick="closeModal()">Cancel</button>
       </div>
     </div>
-
-    <div class="toast" id="toast">Update Successful</div>
 
     <script>
       const API = "https://script.google.com/macros/s/AKfycbxQZZJrn4FOma6sougWd1PAhY_QTmi2LrpX1S9_mCx578L_a0IME3Hakd65ry9jKkL5/exec";
-      let USER = "";
-      let PASS = "";
-      let DATA = [];
-      async function api(action, obj = {}) {
-        const res = await fetch(API, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            action,
-            user: USER,
-            pass: PASS,
-            ...obj
-          })
-        });
-        return res.json();
-      }
-async function login(){
-
-console.log("LOGIN CLICKED");
-
-USER = document.getElementById("user").value.trim();
-PASS = document.getElementById("pass").value.trim();
-
-if(!USER || !PASS){
-alert("Enter username & password");
-return;
-}
-
-try{
-
-console.log("Calling API...");
-
-const test = await api("get");
-
-console.log("API Response:", test);
-
-if(!test.success){
-alert("Invalid Login");
-return;
-}
-
-document.getElementById("loginBox").style.display="none";
-document.getElementById("app").style.display="block";
-
-loadData();
-
-}catch(err){
-console.error(err);
-alert("Cannot reach backend");
-}
-}
+      let inventory = [];
+      /* ---------- LOAD DATA ---------- */
       async function loadData() {
-        loader.style.display = "block";
-        const res = await api("get");
-        DATA = res.data;
-        render(DATA);
-        loader.style.display = "none";
+        document.getElementById("loading").style.display = "block";
+        document.getElementById("tableBody").innerHTML = "";
+        const res = await fetch(API + "?action=list");
+        inventory = await res.json();
+        render(inventory);
+        document.getElementById("loading").style.display = "none";
       }
-
-      function render(list) {
-        tableBody.innerHTML = "";
-        list.forEach(item => {
-          tableBody.innerHTML += `
-<tr>
-<td contenteditable="false">${item.product}</td>
-<td>${item.stock}</td>
+      /* ---------- RENDER ---------- */
+      function render(data) {
+        const tbody = document.getElementById("tableBody");
+        tbody.innerHTML = "";
+        data.forEach(p => {
+          tbody.innerHTML += `
+<tr data-id="${p.id}">
+<td>${p.product}</td>
+<td>${p.stock}</td>
 <td>
-<button class="icon-btn" onclick="editRow(this,${item.row})">
-<i class="fa fa-pen"></i>
-</button>
-<button class="icon-btn" onclick="deleteRow(${item.row})">
-<i class="fa fa-trash"></i>
-</button>
-</td>
-</tr>`;
+<button class="iconBtn" onclick="editRow(this)">✎</button>
+<button class="iconBtn" onclick="deleteRow(${p.id})">🗑</button>
+</tr>
+`;
         });
+      }
+      /* ---------- EDIT ---------- */
+      function editRow(btn) {
+        const tr = btn.closest("tr");
+        const id = tr.dataset.id;
+        const product = tr.children[0].innerText;
+        const stock = parseInt(tr.children[1].innerText);
+        tr.innerHTML = `
+<td><input class="edit-product" value="${product}"></td>
+<td>
+<div class="counter">
+<button onclick="changeStock(this,-1)">-</button>
+<span>${stock}</span>
+<button onclick="changeStock(this,1)">+</button>
+</div>
+</td>
+<td>
+<button class="iconBtn save" onclick="saveRow(this,${id})">✔</button>
+<button class="iconBtn cancel" onclick="loadData()">✖</button>
+</td>`;
       }
 
-      function editRow(btn, row) {
-        const tr = btn.closest("tr");
-        const name = tr.children[0];
-        const stockCell = tr.children[1];
-        if (btn.dataset.editing) {
-          api("update", {
-            row,
-            product: name.innerText,
-            stock: stockCell.querySelector("input").value
-          }).then(() => {
-            toast();
-            loadData();
-          });
-          btn.dataset.editing = "";
-          btn.innerHTML = '<i class="fa fa-pen"></i>';
-          return;
-        }
-        name.contentEditable = true;
-        const val = stockCell.innerText;
-        stockCell.innerHTML = `
-<div class="counter">
-<button onclick="this.nextElementSibling.stepDown()">-</button>
-<input type="number" value="${val}">
-<button onclick="this.previousElementSibling.stepUp()">+</button>
-</div>`;
-        btn.innerHTML = '<i class="fa fa-save"></i>';
-        btn.dataset.editing = true;
+      function changeStock(btn, val) {
+        const span = btn.parentElement.querySelector("span");
+        span.innerText = Math.max(0, parseInt(span.innerText) + val);
       }
-      async function deleteRow(row) {
-        await api("delete", {
-          row
-        });
-        toast();
+      /* ---------- SAVE ---------- */
+      async function saveRow(btn, id) {
+        const tr = btn.closest("tr");
+        const product = tr.querySelector("input").value;
+        const stock = tr.querySelector("span").innerText;
+        await fetch(`${API}?action=update&id=${id}&product=${encodeURIComponent(product)}&stock=${stock}`);
+        toast("Update successful");
         loadData();
       }
-
-      function openAdd() {
+      /* ---------- DELETE ---------- */
+      async function deleteRow(id) {
+        await fetch(`${API}?action=delete&id=${id}`);
+        toast("Delete successful");
+        loadData();
+      }
+      /* ---------- ADD ---------- */
+      function openModal() {
         modal.style.display = "flex";
       }
 
@@ -357,26 +365,29 @@ alert("Cannot reach backend");
         modal.style.display = "none";
       }
       async function addProduct() {
-        await api("add", {
-          product: newProduct.value,
-          stock: newStock.value
-        });
+        const product = newProduct.value;
+        const stock = newStock.value;
+        await fetch(`${API}?action=add&product=${encodeURIComponent(product)}&stock=${stock}`);
         closeModal();
-        toast();
+        toast("Update successful");
         loadData();
       }
-
-      function search(q) {
-        const filtered = DATA.filter(x =>
-          x.product.toLowerCase().includes(q.toLowerCase())
+      /* ---------- SEARCH ---------- */
+      function searchProducts(txt) {
+        const filtered = inventory.filter(p =>
+          p.product.toLowerCase().includes(txt.toLowerCase())
         );
         render(filtered);
       }
-
-      function toast() {
-        toast.style.display = "block";
-        setTimeout(() => toast.style.display = "none", 2000);
+      /* ---------- TOAST ---------- */
+      function toast(msg) {
+        const t = document.getElementById("toast");
+        t.innerText = msg;
+        t.style.opacity = 1;
+        setTimeout(() => t.style.opacity = 0, 2000);
       }
+      /* INIT */
+      loadData();
     </script>
 
   </body>
