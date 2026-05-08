@@ -14,6 +14,34 @@
         margin: 0;
       }
 
+      .login {
+        max-width: 320px;
+        margin: 120px auto;
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, .1);
+      }
+
+      .login input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+      }
+
+      .login button {
+        margin-top: 15px;
+        width: 100%;
+        padding: 10px;
+        border: none;
+        background: #000814;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+
       /* HEADER */
       .header {
         display: flex;
@@ -22,6 +50,9 @@
         padding: 20px 40px;
         background: #fff;
         box-shadow: 0 2px 8px rgba(0, 0, 0, .05);
+        position: sticky;
+        top: 0;
+        z-index: 10;
       }
 
       .header img {
@@ -244,52 +275,95 @@
 
   <body>
 
-    <div class="header">
-      <img src="./lunaslogo.jpg">
-      <h2>Product Inventory</h2>
+    <div id="loginBox" class="login">
+      <h3>Admin Login</h3>
+      <input id="user" placeholder="User" style="width: 90%;">
+      <input id="pass" type="password" placeholder="Password" style="width: 90%;">
+      <button type="button" onclick="login()" style="width: 97%;">Login</button>
     </div>
 
-    <div class="card">
+    <div id="app" style="display:none">
 
-      <div class="toolbar">
-        <input class="search" placeholder="Search products..." oninput="searchProducts(this.value)">
-        <button class="addBtn" onclick="openModal()">+</button>
+      <div class="header">
+        <img src="./lunaslogo.jpg">
+        <h2>Product Inventory</h2>
       </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th>Stock</th>
-            <th></th>
-          </tr>
-        </thead>
+      <div class="card">
 
-        <tbody id="tableBody"></tbody>
+        <div class="toolbar">
+          <input class="search" placeholder="Search products..." oninput="searchProducts(this.value)">
+          <button class="addBtn" onclick="openModal()">+</button>
+        </div>
 
-      </table>
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Stock</th>
+              <th></th>
+            </tr>
+          </thead>
 
-      <div id="loading" class="loading">
-        Loading inventory...
+          <tbody id="tableBody"></tbody>
+
+        </table>
+
+        <div id="loading" class="loading">
+          Loading inventory...
+        </div>
+
       </div>
 
-    </div>
+      <div id="toast" class="toast"></div>
 
-    <div id="toast" class="toast"></div>
-
-    <!-- MODAL -->
-    <div id="modal" class="modal">
-      <div class="popup">
-        <h3>Add Product</h3>
-        <input id="newProduct" placeholder="Product" style="width: 93%;">
-        <input id="newStock" type="number" placeholder="Stock" style="width: 93%;">
-        <button class="add-prd-save-btn" onclick="addProduct()">Save</button>
-        <button class="add-prd-cancel-btn" onclick="closeModal()">Cancel</button>
+      <!-- MODAL -->
+      <div id="modal" class="modal">
+        <div class="popup">
+          <h3>Add Product</h3>
+          <input id="newProduct" placeholder="Product" style="width: 93%;">
+          <input id="newStock" type="number" placeholder="Stock" style="width: 93%;">
+          <button class="add-prd-save-btn" onclick="addProduct()">Save</button>
+          <button class="add-prd-cancel-btn" onclick="closeModal()">Cancel</button>
+        </div>
       </div>
     </div>
 
     <script>
       const API = "https://script.google.com/macros/s/AKfycbxQZZJrn4FOma6sougWd1PAhY_QTmi2LrpX1S9_mCx578L_a0IME3Hakd65ry9jKkL5/exec";
+      async function login() {
+        USER = document.getElementById("user").value.trim();
+        PASS = document.getElementById("pass").value.trim();
+        if (!USER || !PASS) {
+          alert("Enter username & password");
+          return;
+        }
+        try {
+          const data = {
+            action: "auth",
+            user: USER,
+            pass: PASS
+          };
+          const res = await fetch(API, {
+            method: "POST",
+            headers: {
+              "Content-Type": "text/plain"
+            },
+            body: JSON.stringify(data)
+          });
+          const resdata = await res.json();
+          if (!resdata.success) {
+            alert("Invalid Login");
+            return;
+          }
+          loadData();
+          document.getElementById("loginBox").style.display = "none";
+          document.getElementById("app").style.display = "block";
+        } catch (err) {
+          console.error(err);
+          alert("Cannot reach backend");
+        }
+      }
       let inventory = [];
       /* ---------- LOAD DATA ---------- */
       async function loadData() {
@@ -387,7 +461,7 @@
         setTimeout(() => t.style.opacity = 0, 2000);
       }
       /* INIT */
-      loadData();
+      //loadData();
     </script>
 
   </body>
